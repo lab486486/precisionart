@@ -76,9 +76,7 @@ function resolveRecommendHref(title: string, href: string, movies: MovieLink[]) 
     );
   });
 
-  if (matched) return matched.path;
-  const query = title || hrefName;
-  return query ? `/search/?q=${encodeURIComponent(query)}` : '/search/';
+  return matched ? matched.path : '/';
 }
 
 function titleFromHref(href: string) {
