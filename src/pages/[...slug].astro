@@ -14,7 +14,12 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const html = enhanceTimelineHtml(entry.body ?? '');
+const catalog = (await getMovies()).map((item) => ({
+  name: item.data.name,
+  path: entryPath(item),
+  slug: item.data.entrySlug,
+}));
+const html = enhanceTimelineHtml(entry.body ?? '', catalog);
 const category = getCategory(entry.data.category);
 const canonical = entry.data.canonical ?? entryPath(entry);
 ---
