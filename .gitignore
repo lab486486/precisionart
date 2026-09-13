@@ -1,6 +1,7 @@
 dist/
 .astro/
 node_modules/
+public/thumbs/
 
 npm-debug.log*
 yarn-debug.log*

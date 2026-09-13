@@ -4,11 +4,13 @@ import SearchBox from '../components/SearchBox.astro';
 import MovieCard from '../components/MovieCard.astro';
 import { faqs, popularQueries } from '../data/site';
 import { getListedMovies } from '../lib/movies';
+import { cardImage } from '../lib/thumbs';
 
 const latest = (await getListedMovies()).slice(0, 10);
+const preloadImage = cardImage(latest[0]?.data.thumbnail);
 ---
 
-<Base>
+<Base preloadImage={preloadImage}>
   <section class="hero">
     <p class="kicker">SCENE INDEX</p>
     <h1>영화 명장면 좌표 검색</h1>
@@ -24,8 +26,8 @@ const latest = (await getListedMovies()).slice(0, 10);
   {latest.length > 0 && (
     <section class="section home-movies">
       <div class="movie-grid home-grid">
-        {latest.map((entry) => (
-          <MovieCard entry={entry} />
+        {latest.map((entry, index) => (
+          <MovieCard entry={entry} priority={index < 2} />
         ))}
       </div>
     </section>

@@ -9,7 +9,7 @@
   --gold: #b8863b;
   --shadow: 0 10px 30px rgba(28, 20, 18, 0.07);
   --radius: 14px;
-  --sans: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Segoe UI', sans-serif;
 }
 
 * {

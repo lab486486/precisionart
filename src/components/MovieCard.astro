@@ -1,19 +1,30 @@
 ---
 import { entryPath, movieDate, type MovieEntry } from '../lib/movies';
+import { cardImage } from '../lib/thumbs';
 
 interface Props {
   entry: MovieEntry;
+  priority?: boolean;
 }
 
-const { entry } = Astro.props;
+const { entry, priority = false } = Astro.props;
 const meta = entry.data.year || movieDate(entry);
+const thumb = cardImage(entry.data.thumbnail);
 ---
 
 <article class="movie-card">
   <a class="card-link" href={entryPath(entry)}>
-    {entry.data.thumbnail && (
+    {thumb && (
       <div class="movie-thumb">
-        <img src={entry.data.thumbnail} alt="" width="400" height="560" />
+        <img
+          src={thumb}
+          alt=""
+          width="400"
+          height="533"
+          decoding="async"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : 'low'}
+        />
       </div>
     )}
     <div class="movie-body">

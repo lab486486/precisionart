@@ -41,7 +41,7 @@ import SearchBox from '../components/SearchBox.astro';
 
   function card(item: Item) {
     const thumb = item.thumbnail
-      ? `<div class="movie-thumb"><img src="${item.thumbnail}" alt="" width="400" height="560" /></div>`
+      ? `<div class="movie-thumb"><img src="${item.thumbnail}" alt="" width="400" height="533" loading="lazy" decoding="async" /></div>`
       : '';
     const meta = [item.category, item.year].filter(Boolean).join(' · ');
     return `<article class="movie-card"><a class="card-link" href="${item.href}">${thumb}<div class="movie-body"><p class="meta">${meta}</p><h3>${item.name}</h3></div></a></article>`;

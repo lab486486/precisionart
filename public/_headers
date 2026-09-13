@@ -4,3 +4,9 @@
   Content-Type: application/rss+xml; charset=utf-8
 /ads.txt
   Content-Type: text/plain; charset=utf-8
+/thumbs/*
+  Cache-Control: public, max-age=31536000, immutable
+/uploads/*
+  Cache-Control: public, max-age=31536000, immutable
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

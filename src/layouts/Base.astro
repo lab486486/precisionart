@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   canonical?: string;
   image?: string;
+  preloadImage?: string;
   noindex?: boolean;
 }
 
@@ -17,6 +18,7 @@ const {
   description = site.description,
   canonical,
   image,
+  preloadImage,
   noindex = false,
 } = Astro.props;
 
@@ -42,17 +44,19 @@ const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site.url).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     {image && <meta property="og:image" content={new URL(image, site.url).href} />}
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
     {!noindex && (
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8094444885520451"
-        crossorigin="anonymous"></script>
+      <script is:inline>
+        window.addEventListener('load', () => {
+          const script = document.createElement('script');
+          script.async = true;
+          script.src =
+            'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8094444885520451';
+          script.crossOrigin = 'anonymous';
+          document.head.appendChild(script);
+        });
+      </script>
     )}
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-    />
   </head>
   <body>
     <Header />

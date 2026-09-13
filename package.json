@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "thumbs": "node scripts/build-thumbs.mjs",
+    "build": "node scripts/build-thumbs.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "migrate": "node scripts/migrate.mjs",
@@ -17,7 +18,8 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.2",
-    "fuse.js": "^7.5.0"
+    "fuse.js": "^7.5.0",
+    "sharp": "^0.35.4"
   },
   "allowScripts": {
     "esbuild": true
