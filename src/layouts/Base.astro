@@ -36,7 +36,7 @@ const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site.url).href;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {!noindex && <link rel="sitemap" href="/sitemap.xml" />}
     {!noindex && (
-      <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss/" />
+      <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss" />
     )}
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />

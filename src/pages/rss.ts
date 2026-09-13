@@ -4,7 +4,7 @@ import { absUrl, escapeXml, rssItems } from '../lib/feed';
 
 export const GET: APIRoute = async () => {
   const items = await rssItems();
-  const self = absUrl('/rss/');
+  const self = absUrl('/rss');
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',

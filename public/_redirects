@@ -1,6 +1,6 @@
-/rss /rss/ 301
-/rss.xml /rss/ 301
-/rss.xml/ /rss/ 301
+/rss/ /rss 301
+/rss.xml /rss 301
+/rss.xml/ /rss 301
 /category/영화리뷰 /category/review/ 301
 /category/추천글 /category/recommend/ 301
 /category/영화지시 / 301

@@ -8,9 +8,9 @@ const REDIRECTS = path.join(ROOT, 'public', '_redirects');
 const SHORTLINKS = path.join(ROOT, 'public', 'shortlinks.json');
 const HIDDEN_CATEGORIES = new Set(['영화지시', 'instruction']);
 
-const MANUAL_REDIRECTS = `/rss /rss/ 301
-/rss.xml /rss/ 301
-/rss.xml/ /rss/ 301
+const MANUAL_REDIRECTS = `/rss/ /rss 301
+/rss.xml /rss 301
+/rss.xml/ /rss 301
 /category/영화리뷰 /category/review/ 301
 /category/추천글 /category/recommend/ 301
 /category/영화지시 / 301

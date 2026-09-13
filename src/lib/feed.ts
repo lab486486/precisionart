@@ -29,7 +29,7 @@ export async function publicPages() {
     { loc: absUrl('/'), lastmod: latestDate(entries), changefreq: 'daily', priority: '1.0' },
     { loc: absUrl('/search/'), changefreq: 'weekly', priority: '0.4' },
     { loc: absUrl('/privacy/'), changefreq: 'yearly', priority: '0.2' },
-    { loc: absUrl('/rss/'), changefreq: 'daily', priority: '0.3' },
+    { loc: absUrl('/rss'), changefreq: 'daily', priority: '0.3' },
     ...categories.map((category) => ({
       loc: absUrl(categoryPath(category.slug)),
       changefreq: 'weekly',
