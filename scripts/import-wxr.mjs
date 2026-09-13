@@ -11,9 +11,22 @@ const HIDDEN_CATEGORIES = new Set(['영화지시', 'instruction']);
 const MANUAL_REDIRECTS = `/rss/ /rss 301
 /rss.xml /rss 301
 /rss.xml/ /rss 301
+/feed /rss 301
+/feed/ /rss 301
+/sitemap_index.xml /sitemap.xml 301
+/wp-sitemap.xml /sitemap.xml 301
 /category/영화리뷰 /category/review/ 301
+/category/영화리뷰/ /category/review/ 301
+/category/%EC%98%81%ED%99%94%EB%A6%AC%EB%B7%B0 /category/review/ 301
+/category/%EC%98%81%ED%99%94%EB%A6%AC%EB%B7%B0/ /category/review/ 301
 /category/추천글 /category/recommend/ 301
+/category/추천글/ /category/recommend/ 301
+/category/%EC%B6%94%EC%B2%9C%EA%B8%80 /category/recommend/ 301
+/category/%EC%B6%94%EC%B2%9C%EA%B8%80/ /category/recommend/ 301
 /category/영화지시 / 301
+/category/영화지시/ / 301
+/category/%EC%98%81%ED%99%94%EC%A7%80%EC%8B%9C / 301
+/category/%EC%98%81%ED%99%94%EC%A7%80%EC%8B%9C/ / 301
 /privacy-policy /privacy/ 301
 /privacy-policy/ /privacy/ 301
 `.trim();
