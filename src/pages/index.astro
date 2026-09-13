@@ -12,11 +12,7 @@ const latest = (await getListedMovies()).slice(0, 10);
   <section class="hero">
     <p class="kicker">SCENE INDEX</p>
     <h1>영화 명장면 좌표 검색</h1>
-    <p class="lede">
-      국내외 영화의 신스틸러 씬이 몇 분 몇 초에 나오는지 안내합니다.{' '}
-      <br class="lede-break" />
-      영상은 올리지 않습니다.
-    </p>
+    <p class="lede">국내외 영화의 신스틸러 씬이 몇 분 몇 초에 나오는지 알려드릴께요</p>
     <SearchBox autofocus />
     <div class="chips">
       {popularQueries.map((item) => (
