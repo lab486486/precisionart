@@ -3,12 +3,9 @@ import Base from '../layouts/Base.astro';
 import SearchBox from '../components/SearchBox.astro';
 import MovieCard from '../components/MovieCard.astro';
 import { faqs, popularQueries } from '../data/site';
-import { categories } from '../lib/categories';
-import { getFeaturedMovies, getListedMovies, getMoviesByCategory } from '../lib/movies';
+import { getListedMovies } from '../lib/movies';
 
-const listed = await getListedMovies();
-const featured = await getFeaturedMovies();
-const reviews = await getMoviesByCategory('review');
+const latest = (await getListedMovies()).slice(0, 10);
 ---
 
 <Base>
@@ -28,39 +25,12 @@ const reviews = await getMoviesByCategory('review');
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-head">
-      <h2>분류</h2>
-    </div>
-    <div class="category-grid">
-      {categories.map((category) => (
-        <a class="category-card" href={`/category/${category.slug}/`}>
-          <small>{category.name}</small>
-          <strong>{category.description}</strong>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  {featured.length > 0 && (
-    <section class="section">
-      <div class="section-head">
-        <h2>최근 좌표 안내</h2>
-        <p>{listed.length}편</p>
-      </div>
-      <div class="movie-grid">
-        {featured.map((entry) => (
+  {latest.length > 0 && (
+    <section class="section home-movies">
+      <div class="movie-grid home-grid">
+        {latest.map((entry) => (
           <MovieCard entry={entry} />
         ))}
-      </div>
-    </section>
-  )}
-
-  {reviews.length > featured.length && (
-    <section class="section">
-      <div class="section-head">
-        <h2>영화리뷰</h2>
-        <a class="related-more" href="/category/review/">전체 보기</a>
       </div>
     </section>
   )}

@@ -1,11 +1,12 @@
 ---
-import { categoryLabel, entryPath, movieDate, type MovieEntry } from '../lib/movies';
+import { entryPath, movieDate, type MovieEntry } from '../lib/movies';
 
 interface Props {
   entry: MovieEntry;
 }
 
 const { entry } = Astro.props;
+const meta = entry.data.year || movieDate(entry);
 ---
 
 <article class="movie-card">
@@ -16,10 +17,7 @@ const { entry } = Astro.props;
       </div>
     )}
     <div class="movie-body">
-      <p class="meta">
-        {categoryLabel(entry)}
-        {entry.data.year ? ` · ${entry.data.year}` : ` · ${movieDate(entry)}`}
-      </p>
+      {meta && <p class="meta">{meta}</p>}
       <h3>{entry.data.name}</h3>
     </div>
   </a>

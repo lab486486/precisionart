@@ -1,10 +1,9 @@
 ---
-import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import AdSlot from '../components/AdSlot.astro';
-import RelatedMovies from '../components/RelatedMovies.astro';
 import { getCategory } from '../lib/categories';
-import { entryPath, getMovies, getRelatedMovies } from '../lib/movies';
+import { entryPath, getMovies } from '../lib/movies';
+import { enhanceTimelineHtml } from '../lib/timeline';
 
 export async function getStaticPaths() {
   const entries = await getMovies();
@@ -15,8 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
-const related = await getRelatedMovies(entry);
+const html = enhanceTimelineHtml(entry.body ?? '');
 const category = getCategory(entry.data.category);
 const canonical = entry.data.canonical ?? entryPath(entry);
 ---
@@ -43,14 +41,10 @@ const canonical = entry.data.canonical ?? entryPath(entry);
       <div class="ad-inarticle">
         <AdSlot adSlot="5384795752" label="본문 중간" />
       </div>
-      <div class="prose">
-        <Content />
-      </div>
+      <div class="prose" set:html={html} />
     </article>
-    <RelatedMovies
-      title={category?.name ?? '관련 글'}
-      slug={category?.slug}
-      entries={related}
-    />
+    <aside class="entry-sidebar" aria-label="광고">
+      <AdSlot adSlot="7369090567" label="본문 사이드바" width={300} height={600} />
+    </aside>
   </div>
 </Base>

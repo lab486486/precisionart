@@ -212,7 +212,8 @@ JSON만 출력하세요.
 - 상단에 포스터와 장르/감독/출연/제작사/상영등급/에디터 평점 정보 박스를 넣으세요. 포스터 src는 {poster} 를 그대로 쓰세요.
 - 섹션 h2는 이 스타일: font-size: clamp(1.25em, 4vw, 1.5em); color: #111; font-weight: 800; margin: 28px 0 16px; line-height: 1.35; word-break: keep-all; border-left: 5px solid #c62828; padding-left: 12px;
 - 필수 섹션: 이 영화의 줄거리 / [영화제목] 명장면 타임라인 좌표 / 비슷한 분위기의 한국 영화 추천 / 에디터의 종합 평가
-- 타임라인은 details 아코디언. summary에는 시간을 넣지 말고 장면 제목만, 앞에 ▶ ▶, 색상 #c62828. 정확한 좌표 시간은 details 안에 넣으세요.
+- 타임라인 좌표 h2 바로 아래에 <p class="timeline-hint">좌표를 클릭하면 해당 좌표의 스크린샷을 확인할 수 있습니다.</p> 를 넣으세요.
+- 타임라인은 details 아코디언. summary에는 시간을 넣지 말고 장면 제목만, 앞에 ▶, 색상 #c62828. 정확한 좌표 시간은 details 안에 넣으세요.
 - 추천 영화는 카드 3개. 보러가기 href는 /추천영화제목-좌표-배우1-배우2 상대경로.
 - 본문은 1200자 이상.
 """

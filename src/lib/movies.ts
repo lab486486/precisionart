@@ -25,13 +25,6 @@ export async function getFeaturedMovies() {
   return entries.slice(0, 12);
 }
 
-export async function getRelatedMovies(entry: MovieEntry, limit = 8) {
-  const entries = await getListedMovies();
-  return entries
-    .filter((item) => item.id !== entry.id && item.data.category === entry.data.category)
-    .slice(0, limit);
-}
-
 export function entryPath(entry: MovieEntry) {
   return `/${entry.data.entrySlug}/`;
 }

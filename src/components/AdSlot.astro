@@ -2,19 +2,21 @@
 interface Props {
   adSlot: string;
   label: string;
+  width?: number;
+  height?: number;
 }
 
-const { adSlot, label } = Astro.props;
+const { adSlot, label, width, height } = Astro.props;
+const fixed = Boolean(width && height);
 ---
 
-<div class="ad-slot" data-label={label}>
+<div class:list={['ad-slot', { 'ad-slot-fixed': fixed }]} data-label={label}>
   <ins
     class="adsbygoogle"
-    style="display:block"
+    style={fixed ? `display:inline-block;width:${width}px;height:${height}px` : 'display:block'}
     data-ad-client="ca-pub-8094444885520451"
     data-ad-slot={adSlot}
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
+    {...(fixed ? {} : { 'data-ad-format': 'auto', 'data-full-width-responsive': 'true' })}></ins>
 </div>
 <script is:inline>
   (window.adsbygoogle = window.adsbygoogle || []).push({});
