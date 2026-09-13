@@ -1,0 +1,33 @@
+---
+import { categoryPath } from '../lib/categories';
+import { entryPath, type MovieEntry } from '../lib/movies';
+
+interface Props {
+  title: string;
+  slug?: string;
+  entries: MovieEntry[];
+}
+
+const { title, slug, entries } = Astro.props;
+---
+
+<aside class="related-sidebar" aria-label="같은 분류의 글">
+  <div class="related-card">
+    <p class="card-meta">같은 분류</p>
+    <strong>{title}</strong>
+    {entries.length > 0 ? (
+      <ul class="related-list">
+        {entries.map((item) => (
+          <li>
+            <a href={entryPath(item)}>{item.data.name}</a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="muted">같은 분류에 다른 글이 없습니다.</p>
+    )}
+    {slug && (
+      <a class="related-more" href={categoryPath(slug)}>분류 더보기</a>
+    )}
+  </div>
+</aside>

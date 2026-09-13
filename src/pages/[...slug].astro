@@ -1,0 +1,56 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
+import RelatedMovies from '../components/RelatedMovies.astro';
+import { getCategory } from '../lib/categories';
+import { entryPath, getMovies, getRelatedMovies } from '../lib/movies';
+
+export async function getStaticPaths() {
+  const entries = await getMovies();
+  return entries.map((entry) => ({
+    params: { slug: entry.data.entrySlug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const related = await getRelatedMovies(entry);
+const category = getCategory(entry.data.category);
+const canonical = entry.data.canonical ?? entryPath(entry);
+---
+
+<Base
+  title={entry.data.title}
+  description={entry.data.excerpt ?? entry.data.title}
+  canonical={canonical}
+  image={entry.data.thumbnail}
+>
+  <div class="entry-layout">
+    <article class="entry-article">
+      <p class="breadcrumb">
+        <a href="/">프리시전아트</a>
+        {category && (
+          <>
+            / <a href={`/category/${category.slug}/`}>{category.name}</a>
+          </>
+        )}
+        / {entry.data.name}
+      </p>
+      <h1 class="page-title">{entry.data.title}</h1>
+      {entry.data.excerpt && <p class="lede">{entry.data.excerpt}</p>}
+      <div class="ad-inarticle">
+        <AdSlot adSlot="5384795752" label="본문 중간" />
+      </div>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+    <RelatedMovies
+      title={category?.name ?? '관련 글'}
+      slug={category?.slug}
+      entries={related}
+    />
+  </div>
+</Base>

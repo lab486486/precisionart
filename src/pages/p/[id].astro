@@ -1,0 +1,15 @@
+---
+import { entryPath, getMovies } from '../../lib/movies';
+
+export async function getStaticPaths() {
+  const entries = await getMovies();
+  return entries
+    .filter((entry) => entry.data.legacyId)
+    .map((entry) => ({
+      params: { id: String(entry.data.legacyId) },
+      props: { dest: entryPath(entry) },
+    }));
+}
+
+return Astro.redirect(encodeURI(Astro.props.dest), 301);
+---

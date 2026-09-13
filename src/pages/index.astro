@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import MovieCard from '../components/MovieCard.astro';
+import { faqs, popularQueries } from '../data/site';
+import { categories } from '../lib/categories';
+import { getFeaturedMovies, getListedMovies, getMoviesByCategory } from '../lib/movies';
+
+const listed = await getListedMovies();
+const featured = await getFeaturedMovies();
+const reviews = await getMoviesByCategory('review');
+---
+
+<Base>
+  <section class="hero">
+    <p class="kicker">SCENE INDEX</p>
+    <h1>영화 명장면 좌표 검색</h1>
+    <p class="lede">
+      국내외 영화의 신스틸러 씬이 몇 분 몇 초에 나오는지 안내합니다.{' '}
+      <br class="lede-break" />
+      영상은 올리지 않습니다.
+    </p>
+    <SearchBox autofocus />
+    <div class="chips">
+      {popularQueries.map((item) => (
+        <a class="chip" href={`/search/?q=${encodeURIComponent(item.query)}`}>{item.label}</a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>분류</h2>
+    </div>
+    <div class="category-grid">
+      {categories.map((category) => (
+        <a class="category-card" href={`/category/${category.slug}/`}>
+          <small>{category.name}</small>
+          <strong>{category.description}</strong>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="section">
+      <div class="section-head">
+        <h2>최근 좌표 안내</h2>
+        <p>{listed.length}편</p>
+      </div>
+      <div class="movie-grid">
+        {featured.map((entry) => (
+          <MovieCard entry={entry} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {reviews.length > featured.length && (
+    <section class="section">
+      <div class="section-head">
+        <h2>영화리뷰</h2>
+        <a class="related-more" href="/category/review/">전체 보기</a>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="section-head">
+      <h2>자주 하는 질문</h2>
+    </div>
+    <div class="faq-list">
+      {faqs.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<script>
+  const postId = new URLSearchParams(window.location.search).get('p');
+  if (postId) {
+    fetch('/shortlinks.json')
+      .then((response) => response.json())
+      .then((map: Record<string, string>) => {
+        const dest = map[postId];
+        if (dest) window.location.replace(dest);
+      })
+      .catch(() => undefined);
+  }
+</script>

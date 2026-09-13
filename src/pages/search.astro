@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+---
+
+<Base title="검색" description="프리시전아트에서 영화 명장면 좌표를 찾습니다.">
+  <section class="hero">
+    <p class="kicker">SEARCH</p>
+    <h1 class="page-title">영화 검색</h1>
+    <SearchBox />
+  </section>
+  <section class="section">
+    <p id="search-status" class="muted">검색어를 입력하면 제목, 배우, 태그에서 찾습니다.</p>
+    <div id="search-results" class="movie-grid" style="margin-top: 16px;"></div>
+  </section>
+</Base>
+
+<script>
+  import Fuse from 'fuse.js';
+
+  type Item = {
+    name: string;
+    title: string;
+    excerpt: string;
+    href: string;
+    category: string;
+    year: string;
+    cast: string;
+    director: string;
+    date: string;
+    thumbnail?: string;
+    tags: string[];
+  };
+
+  const status = document.getElementById('search-status');
+  const results = document.getElementById('search-results');
+  const params = new URLSearchParams(window.location.search);
+  const query = params.get('q')?.trim() ?? '';
+  const input = document.querySelector<HTMLInputElement>('#q');
+  if (input && query) input.value = query;
+
+  function card(item: Item) {
+    const thumb = item.thumbnail
+      ? `<div class="movie-thumb"><img src="${item.thumbnail}" alt="" width="400" height="560" /></div>`
+      : '';
+    const meta = [item.category, item.year].filter(Boolean).join(' · ');
+    return `<article class="movie-card"><a class="card-link" href="${item.href}">${thumb}<div class="movie-body"><p class="meta">${meta}</p><h3>${item.name}</h3></div></a></article>`;
+  }
+
+  const index = (await fetch('/search-index.json').then((response) => response.json())) as Item[];
+  const fuse = new Fuse(index, {
+    threshold: 0.35,
+    keys: ['name', 'title', 'excerpt', 'tags', 'category', 'cast', 'director', 'year'],
+  });
+
+  if (query && status && results) {
+    const matches = fuse.search(query).map((item) => item.item);
+    status.textContent = matches.length
+      ? `"${query}" 검색 결과 ${matches.length}개`
+      : `"${query}"에 해당하는 글이 없습니다.`;
+    results.innerHTML = matches.map(card).join('');
+  }
+</script>

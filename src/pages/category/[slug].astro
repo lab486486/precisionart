@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import MovieCard from '../../components/MovieCard.astro';
+import { categories, getCategory } from '../../lib/categories';
+import { getMoviesByCategory } from '../../lib/movies';
+
+export function getStaticPaths() {
+  return categories.map((category) => ({ params: { slug: category.slug } }));
+}
+
+const { slug } = Astro.params;
+const category = getCategory(slug!);
+if (!category) {
+  throw new Error(`Unknown category: ${slug}`);
+}
+
+const entries = await getMoviesByCategory(category.slug);
+---
+
+<Base title={category.name} description={category.description}>
+  <section class="hero">
+    <p class="breadcrumb"><a href="/">프리시전아트</a> / {category.name}</p>
+    <h1 class="page-title">{category.name}</h1>
+    <p class="lede">{category.description}. {entries.length}개 글.</p>
+  </section>
+  <section class="section">
+    {entries.length > 0 ? (
+      <div class="movie-grid">
+        {entries.map((entry) => (
+          <MovieCard entry={entry} />
+        ))}
+      </div>
+    ) : (
+      <p class="muted">이 분류에 아직 글이 없습니다.</p>
+    )}
+  </section>
+</Base>

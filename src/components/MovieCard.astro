@@ -1,0 +1,26 @@
+---
+import { categoryLabel, entryPath, movieDate, type MovieEntry } from '../lib/movies';
+
+interface Props {
+  entry: MovieEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<article class="movie-card">
+  <a class="card-link" href={entryPath(entry)}>
+    {entry.data.thumbnail && (
+      <div class="movie-thumb">
+        <img src={entry.data.thumbnail} alt="" width="400" height="560" />
+      </div>
+    )}
+    <div class="movie-body">
+      <p class="meta">
+        {categoryLabel(entry)}
+        {entry.data.year ? ` · ${entry.data.year}` : ` · ${movieDate(entry)}`}
+      </p>
+      <h3>{entry.data.name}</h3>
+    </div>
+  </a>
+</article>

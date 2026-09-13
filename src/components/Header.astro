@@ -1,0 +1,21 @@
+---
+import { categories } from '../lib/categories';
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">▣</span>
+      <span class="brand-text">
+        <span class="brand-name">프리시전아트</span>
+        <span class="brand-sub">명장면 좌표</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="주요 메뉴">
+      {categories.map((category) => (
+        <a href={`/category/${category.slug}/`}>{category.name}</a>
+      ))}
+      <a href="/search/">검색</a>
+    </nav>
+  </div>
+</header>
