@@ -5,7 +5,7 @@ import sharp from 'sharp';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MOVIES = path.join(ROOT, 'src', 'content', 'movies');
 const PUBLIC_DIR = path.join(ROOT, 'public');
-const WIDTH = 400;
+const SIZES = [200, 360];
 
 async function thumbnailPaths() {
   const files = await readdir(MOVIES);
@@ -34,15 +34,18 @@ await mkdir(path.join(PUBLIC_DIR, 'thumbs'), { recursive: true });
 
 for (const src of paths) {
   const input = path.join(PUBLIC_DIR, src.replace(/^\//, ''));
-  const dest = path.join(PUBLIC_DIR, 'thumbs', src.slice('/uploads/'.length).replace(/\.[^.]+$/, '.webp'));
-  await mkdir(path.dirname(dest), { recursive: true });
-  if (!(await needsBuild(input, dest))) continue;
-  await sharp(input)
-    .rotate()
-    .resize(WIDTH, null, { withoutEnlargement: true })
-    .webp({ quality: 72 })
-    .toFile(dest);
-  console.log(`thumb ${path.relative(PUBLIC_DIR, dest)}`);
+  const rel = src.slice('/uploads/'.length).replace(/\.[^.]+$/, '.webp');
+  for (const width of SIZES) {
+    const dest = path.join(PUBLIC_DIR, 'thumbs', String(width), rel);
+    await mkdir(path.dirname(dest), { recursive: true });
+    if (!(await needsBuild(input, dest))) continue;
+    await sharp(input)
+      .rotate()
+      .resize(width, null, { withoutEnlargement: true })
+      .webp({ quality: 62 })
+      .toFile(dest);
+    console.log(`thumb ${path.relative(PUBLIC_DIR, dest)}`);
+  }
 }
 
 console.log(`card thumbs ${paths.length}개`);

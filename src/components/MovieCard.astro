@@ -9,7 +9,8 @@ interface Props {
 
 const { entry, priority = false } = Astro.props;
 const meta = entry.data.year || movieDate(entry);
-const thumb = cardImage(entry.data.thumbnail);
+const thumb = cardImage(entry.data.thumbnail, 360);
+const thumbSmall = cardImage(entry.data.thumbnail, 200);
 ---
 
 <article class="movie-card">
@@ -17,10 +18,12 @@ const thumb = cardImage(entry.data.thumbnail);
     {thumb && (
       <div class="movie-thumb">
         <img
-          src={thumb}
+          src={thumbSmall ?? thumb}
+          srcset={thumbSmall && thumb ? `${thumbSmall} 200w, ${thumb} 360w` : undefined}
+          sizes="(max-width: 700px) 45vw, 180px"
           alt=""
-          width="400"
-          height="533"
+          width="360"
+          height="480"
           decoding="async"
           loading={priority ? 'eager' : 'lazy'}
           fetchpriority={priority ? 'high' : 'low'}
@@ -29,7 +32,7 @@ const thumb = cardImage(entry.data.thumbnail);
     )}
     <div class="movie-body">
       {meta && <p class="meta">{meta}</p>}
-      <h3>{entry.data.name}</h3>
+      <p class="movie-name">{entry.data.name}</p>
     </div>
   </a>
 </article>

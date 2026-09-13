@@ -306,9 +306,10 @@ details.faq-item,
   font-weight: 700;
 }
 
-.movie-body h3 {
+.movie-body .movie-name {
   margin: 6px 0 0;
   font-size: 16px;
+  font-weight: 700;
   letter-spacing: -0.03em;
   word-break: keep-all;
 }

@@ -14,7 +14,7 @@ export const GET: APIRoute = async () => {
     cast: entry.data.cast ?? '',
     director: entry.data.director ?? '',
     date: movieDate(entry),
-    thumbnail: cardImage(entry.data.thumbnail),
+    thumbnail: cardImage(entry.data.thumbnail, 200),
     tags: entry.data.tags,
   }));
 

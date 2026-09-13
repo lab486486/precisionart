@@ -7,7 +7,7 @@ import { getListedMovies } from '../lib/movies';
 import { cardImage } from '../lib/thumbs';
 
 const latest = (await getListedMovies()).slice(0, 10);
-const preloadImage = cardImage(latest[0]?.data.thumbnail);
+const preloadImage = cardImage(latest[0]?.data.thumbnail, 200);
 ---
 
 <Base preloadImage={preloadImage}>
@@ -48,12 +48,12 @@ const preloadImage = cardImage(latest[0]?.data.thumbnail);
   </section>
 </Base>
 
-<script>
+<script is:inline>
   const postId = new URLSearchParams(window.location.search).get('p');
   if (postId) {
     fetch('/shortlinks.json')
       .then((response) => response.json())
-      .then((map: Record<string, string>) => {
+      .then((map) => {
         const dest = map[postId];
         if (dest) window.location.replace(dest);
       })
