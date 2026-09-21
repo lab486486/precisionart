@@ -73,6 +73,27 @@ textarea {
   gap: 20px;
 }
 
+.header-search {
+  flex: 1;
+  min-width: min(100%, 220px);
+  max-width: 420px;
+}
+
+.header-search-form {
+  margin: 0;
+  max-width: none;
+  padding: 4px;
+  box-shadow: none;
+}
+
+.header-search-form input {
+  padding: 8px 10px;
+}
+
+.header-search-form button {
+  padding: 8px 12px;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -575,5 +596,9 @@ details.faq-item {
   .header-inner {
     flex-wrap: wrap;
     gap: 10px;
+  }
+
+  .header-search {
+    max-width: none;
   }
 }

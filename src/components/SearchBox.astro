@@ -2,21 +2,23 @@
 interface Props {
   value?: string;
   autofocus?: boolean;
+  compact?: boolean;
+  inputId?: string;
 }
 
-const { value = '', autofocus = false } = Astro.props;
+const { value = '', autofocus = false, compact = false, inputId = 'q' } = Astro.props;
 ---
 
-<form class="search-form" action="/search/" method="get">
-  <label class="visually-hidden" for="q">영화 검색</label>
+<form class:list={['search-form', { 'header-search-form': compact }]} action="/search/" method="get">
+  <label class="visually-hidden" for={inputId}>영화 검색</label>
   <input
-    id="q"
+    id={inputId}
     type="search"
     name="q"
     value={value}
-    placeholder="영화 제목, 배우, 장면을 입력하세요"
+    placeholder={compact ? '영화, 배우, 엑기스 좌표' : '영화 제목, 배우, 엑기스 좌표를 입력하세요'}
     required
     autofocus={autofocus}
   />
-  <button type="submit">좌표 검색</button>
+  <button type="submit">{compact ? '검색' : '좌표 검색'}</button>
 </form>

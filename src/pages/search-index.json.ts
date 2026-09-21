@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { categoryLabel, entryPath, getListedMovies, movieDate } from '../lib/movies';
+import { SEARCH_KEYWORDS } from '../lib/searchQuery';
 import { cardImage } from '../lib/thumbs';
 
 export const GET: APIRoute = async () => {
@@ -16,6 +17,7 @@ export const GET: APIRoute = async () => {
     date: movieDate(entry),
     thumbnail: cardImage(entry.data.thumbnail, 200),
     tags: entry.data.tags,
+    keywords: SEARCH_KEYWORDS,
   }));
 
   return new Response(JSON.stringify(payload), {

@@ -62,7 +62,7 @@ const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site.url).href;
     )}
   </head>
   <body>
-    <Header />
+    <Header search={!noindex} />
     <main class="main">
       <div class="wrap">
         <slot />

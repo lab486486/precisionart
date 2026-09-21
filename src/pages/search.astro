@@ -10,13 +10,14 @@ import SearchBox from '../components/SearchBox.astro';
     <SearchBox />
   </section>
   <section class="section">
-    <p id="search-status" class="muted">검색어를 입력하면 제목, 배우, 태그에서 찾습니다.</p>
+    <p id="search-status" class="muted">검색어를 입력하면 제목, 배우, 엑기스·하이라이트 좌표에서 찾습니다.</p>
     <div id="search-results" class="movie-grid" style="margin-top: 16px;"></div>
   </section>
 </Base>
 
 <script>
   import Fuse from 'fuse.js';
+  import { meaningfulQuery } from '../lib/searchQuery';
 
   type Item = {
     name: string;
@@ -30,14 +31,17 @@ import SearchBox from '../components/SearchBox.astro';
     date: string;
     thumbnail?: string;
     tags: string[];
+    keywords?: string[];
   };
 
   const status = document.getElementById('search-status');
   const results = document.getElementById('search-results');
   const params = new URLSearchParams(window.location.search);
   const query = params.get('q')?.trim() ?? '';
-  const input = document.querySelector<HTMLInputElement>('#q');
-  if (input && query) input.value = query;
+  const refined = meaningfulQuery(query);
+  for (const input of document.querySelectorAll<HTMLInputElement>('input[name="q"]')) {
+    if (query) input.value = query;
+  }
 
   function card(item: Item) {
     const thumb = item.thumbnail
@@ -50,11 +54,12 @@ import SearchBox from '../components/SearchBox.astro';
   const index = (await fetch('/search-index.json').then((response) => response.json())) as Item[];
   const fuse = new Fuse(index, {
     threshold: 0.35,
-    keys: ['name', 'title', 'excerpt', 'tags', 'category', 'cast', 'director', 'year'],
+    ignoreLocation: true,
+    keys: ['name', 'title', 'excerpt', 'tags', 'keywords', 'category', 'cast', 'director', 'year'],
   });
 
   if (query && status && results) {
-    const matches = fuse.search(query).map((item) => item.item);
+    const matches = refined ? fuse.search(refined).map((item) => item.item) : index;
     status.textContent = matches.length
       ? `"${query}" 검색 결과 ${matches.length}개`
       : `"${query}"에 해당하는 글이 없습니다.`;

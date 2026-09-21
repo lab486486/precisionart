@@ -1,3 +1,13 @@
+---
+import SearchBox from './SearchBox.astro';
+
+interface Props {
+  search?: boolean;
+}
+
+const { search = true } = Astro.props;
+---
+
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="/">
@@ -7,5 +17,10 @@
         <span class="brand-sub">명장면 좌표</span>
       </span>
     </a>
+    {search && (
+      <div class="header-search">
+        <SearchBox compact inputId="header-q" />
+      </div>
+    )}
   </div>
 </header>
