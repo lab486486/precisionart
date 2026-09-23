@@ -12,6 +12,7 @@
   var armedUntil = 0;
   var pendingLeaveAt = 0;
   var lastCountAt = 0;
+  var ignoreLeaveUntil = 0;
   var blockActive = false;
   var scriptRequested = false;
   var observer = null;
@@ -80,12 +81,32 @@
     return isAdZone(event.target) || isAdFrame(event.target);
   }
 
+  function eventElement(event) {
+    var node = event.target;
+    if (node && node.nodeType === 3) node = node.parentElement;
+    return node;
+  }
+
+  // Moving to another article also blurs and fires pagehide. That is not an ad click.
+  function markSiteNav(event) {
+    var node = eventElement(event);
+    if (!isElement(node) || typeof node.closest !== 'function') return;
+    if (isAdZone(node) || isAdFrame(node)) return;
+    if (!node.closest('a[href]')) return;
+    ignoreLeaveUntil = Date.now() + 2500;
+  }
+
+  function leaveIgnored() {
+    return Date.now() < ignoreLeaveUntil;
+  }
+
   // Ad iframes are cross-origin, so the parent stops receiving mouse events
   // once the pointer is over the frame. Hold the arm and do not clear it on blur.
   function arm(fromAdFocus) {
     var now = Date.now();
     var until = now + ARM_MS;
     if (until > armedUntil) armedUntil = until;
+    if (leaveIgnored()) return;
     if (!fromAdFocus || !pendingLeaveAt || now - pendingLeaveAt > FOCUS_GRACE_MS) return;
     pendingLeaveAt = 0;
     commitClick(now);
@@ -108,6 +129,7 @@
   }
 
   function noteLeave() {
+    if (leaveIgnored()) return;
     refreshBlock();
     if (blockActive) {
       wipe();
@@ -224,6 +246,19 @@
     arm(true);
   }
 
+  document.addEventListener('pointerdown', markSiteNav, true);
+  document.addEventListener('touchstart', markSiteNav, { capture: true, passive: true });
+  document.addEventListener('click', markSiteNav, true);
+  document.addEventListener('auxclick', markSiteNav, true);
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Enter') return;
+    markSiteNav(event);
+  }, true);
+  document.addEventListener('submit', function (event) {
+    var node = eventElement(event);
+    if (!isElement(node) || isAdZone(node) || isAdFrame(node)) return;
+    ignoreLeaveUntil = Date.now() + 2500;
+  }, true);
   document.addEventListener('pointerover', onPointer, true);
   document.addEventListener('mouseover', onPointer, true);
   document.addEventListener('pointerdown', onPointer, true);
