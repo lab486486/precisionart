@@ -24,6 +24,7 @@ const movies = defineCollection({
     legacyPath: z.string(),
     canonical: z.string().optional(),
     hiddenFromList: z.boolean().default(false),
+    manual: z.boolean().optional(),
     movieKey: z.string().optional(),
     legacyId: z.number().optional(),
   }),

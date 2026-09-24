@@ -1,0 +1,161 @@
+# Decap CMS. /admin/ 에서 GitHub 로그인 후 왼쪽 메뉴로 글을 넣습니다.
+# 딥시크 작성은 지시만 저장합니다. 본문은 GitHub Action이 DeepSeek로 만듭니다.
+
+locale: ko
+
+backend:
+  name: github
+  repo: lab486486/precisionart
+  branch: main
+  base_url: https://precisionart.net
+  auth_endpoint: api/oauth/auth
+  commit_messages:
+    create: "Add {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
+    uploadMedia: "Upload “{{path}}”"
+    deleteMedia: "Delete “{{path}}”"
+
+local_backend: true
+
+media_folder: public/uploads
+public_folder: /uploads
+
+slug:
+  encoding: unicode
+  clean_accents: true
+
+collections:
+  - name: queue
+    label: 딥시크 작성
+    label_singular: 영화 지시
+    folder: src/content/queue
+    create: true
+    slug: "{{name}}"
+    extension: md
+    format: frontmatter
+    identifier_field: name
+    summary: "{{name}} — {{status}}"
+    fields:
+      - { label: 영화 제목, name: name, widget: string }
+      - label: 카테고리
+        name: category
+        widget: select
+        options:
+          - { label: 영화리뷰, value: review }
+          - { label: 추천글, value: recommend }
+        default: review
+      - { label: 개봉연도, name: year, widget: string }
+      - { label: 대표 이미지, name: thumbnail, widget: image, required: false }
+      - label: 타임라인
+        name: timeline
+        widget: text
+        hint: "한 줄에 좌표와 장면. 예: 00:12 첫 번째 긴장 포인트"
+      - { label: 홈 우선 노출, name: featured, widget: boolean, default: true }
+      - label: 상태
+        name: status
+        widget: select
+        options: [pending, done, error]
+        default: pending
+      - { label: 메모, name: note, widget: text, required: false }
+
+  - name: posts
+    label: 새글 작성
+    label_singular: 영화 글
+    folder: src/content/movies
+    create: true
+    slug: "{{fields.entrySlug}}"
+    extension: md
+    format: frontmatter
+    identifier_field: entrySlug
+    filter:
+      field: manual
+      value: true
+    fields:
+      - { label: 제목, name: title, widget: string }
+      - { label: 영화 이름, name: name, widget: string }
+      - label: 카테고리
+        name: category
+        widget: select
+        options:
+          - { label: 영화리뷰, value: review }
+          - { label: 추천글, value: recommend }
+        default: review
+      - { label: 개봉연도, name: year, widget: string, required: false }
+      - { label: 장르, name: genre, widget: string, required: false }
+      - { label: 감독, name: director, widget: string, required: false }
+      - { label: 출연, name: cast, widget: string, required: false }
+      - { label: 제작사, name: studio, widget: string, required: false }
+      - { label: 평점, name: rating, widget: string, required: false }
+      - { label: 썸네일 경로, name: thumbnail, widget: string, required: false }
+      - { label: 한 줄 설명, name: excerpt, widget: text, required: false }
+      - { label: 홈 우선 노출, name: featured, widget: boolean, default: false }
+      - { label: 목록에서 숨김, name: hiddenFromList, widget: boolean, default: false }
+      - label: 날짜
+        name: date
+        widget: datetime
+        format: YYYY-MM-DD HH:mm:ss
+        date_format: YYYY-MM-DD
+        time_format: HH:mm:ss
+        default: "{{now}}"
+      - { label: 태그, name: tags, widget: list, required: false }
+      - label: 주소 슬러그
+        name: entrySlug
+        widget: string
+        hint: "영화제목-좌표-배우1-배우2"
+      - label: 이전 경로
+        name: legacyPath
+        widget: string
+        hint: "/영화제목-좌표-배우1-배우2/"
+      - { label: 직접 작성, name: manual, widget: hidden, default: true }
+      - { label: 본문 HTML, name: body, widget: text }
+
+  - name: movies
+    label: 발행된 글
+    label_singular: 발행된 글
+    folder: src/content/movies
+    create: false
+    extension: md
+    format: frontmatter
+    identifier_field: entrySlug
+    summary: "{{title}}"
+    fields:
+      - { label: 제목, name: title, widget: string }
+      - { label: 영화 이름, name: name, widget: string }
+      - label: 카테고리
+        name: category
+        widget: select
+        options:
+          - { label: 영화리뷰, value: review }
+          - { label: 추천글, value: recommend }
+      - { label: 개봉연도, name: year, widget: string, required: false }
+      - { label: 장르, name: genre, widget: string, required: false }
+      - { label: 감독, name: director, widget: string, required: false }
+      - { label: 출연, name: cast, widget: string, required: false }
+      - { label: 제작사, name: studio, widget: string, required: false }
+      - { label: 평점, name: rating, widget: string, required: false }
+      - { label: 썸네일 경로, name: thumbnail, widget: string, required: false }
+      - { label: 한 줄 설명, name: excerpt, widget: text, required: false }
+      - { label: 홈 우선 노출, name: featured, widget: boolean, default: false }
+      - { label: 목록에서 숨김, name: hiddenFromList, widget: boolean, default: false }
+      - label: 날짜
+        name: date
+        widget: datetime
+        format: YYYY-MM-DD HH:mm:ss
+        date_format: YYYY-MM-DD
+        time_format: HH:mm:ss
+      - label: 수정일
+        name: updated
+        widget: datetime
+        format: YYYY-MM-DD HH:mm:ss
+        date_format: YYYY-MM-DD
+        time_format: HH:mm:ss
+        required: false
+      - { label: 태그, name: tags, widget: list, required: false }
+      - { label: 주소 슬러그, name: entrySlug, widget: string }
+      - { label: 이전 경로, name: legacyPath, widget: string }
+      - { label: 정규 주소, name: canonical, widget: string, required: false }
+      - { label: 영화 키, name: movieKey, widget: string, required: false }
+      - { label: 이전 글 번호, name: legacyId, widget: number, required: false, value_type: int }
+      - { label: 직접 작성, name: manual, widget: hidden, required: false }
+      - { label: 본문 HTML, name: body, widget: text }

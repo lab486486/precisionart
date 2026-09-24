@@ -2,7 +2,7 @@
 
 워드프레스 `precisionart.net`을 Astro + GitHub + Cloudflare Pages로 옮긴 영화 명장면 좌표 검색 사이트입니다. 영상은 호스팅하지 않고 몇 분 몇 초 타임라인만 안내합니다.
 
-새 글은 `/admin/`에 영화 제목, 개봉연도, 타임라인만 넣으면 대기 파일이 생기고, GitHub Action이 DeepSeek로 `src/content/movies/*.md`를 만든 뒤 Cloudflare가 뿌립니다.
+새 글은 `/admin/`에서 GitHub 로그인 후 넣습니다. 딥시크 작성은 지시만 저장하고, GitHub Action이 DeepSeek로 `src/content/movies/*.md`를 만든 뒤 Cloudflare가 뿌립니다.
 
 ## 로컬 실행
 
@@ -14,7 +14,7 @@ npm run dev
 ```
 
 - 사이트: http://localhost:4321
-- 관리자(글 지시): http://localhost:4321/admin/ — 공개 메뉴에는 없습니다.
+- 관리자: http://localhost:4321/admin/ — Decap CMS. 공개 메뉴에는 없습니다. 로컬 저장은 `npm run cms`를 켠 뒤 사용합니다.
 
 ## 콘텐츠
 
@@ -28,10 +28,12 @@ npm run dev
 
 ## 글 작성 흐름
 
-1. `/admin/`에서 제목, 개봉연도, 타임라인, 썸네일을 넣습니다.
-2. `src/content/queue/{이름}.md`가 `status: pending`으로 저장됩니다.
-3. 이 파일을 GitHub에 올리면 `Publish movie` 워크플로가 DeepSeek로 본문을 씁니다.
-4. 생성된 마크다운이 커밋되고, Cloudflare Pages가 다시 빌드합니다.
+1. `/admin/`에서 GitHub 로그인합니다. 저장소에 쓸 수 있는 계정만 들어갑니다.
+2. **딥시크 작성**에 제목, 개봉연도, 타임라인, 썸네일을 넣으면 `src/content/queue/{이름}.md`가 `status: pending`으로 커밋됩니다.
+3. **새글 작성**은 본문 HTML까지 직접 저장합니다. **발행된 글**은 이미 올라간 글만 고칩니다.
+4. 대기 파일이 GitHub에 있으면 `Publish movie` 워크플로가 DeepSeek로 본문을 쓰고, Cloudflare Pages가 다시 빌드합니다.
+
+GitHub OAuth 콜백은 `https://precisionart.net/api/oauth/callback` 입니다. Pages 환경 변수는 `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` 입니다.
 
 로컬에서만 시험하려면 `.env`에 `DEEPSEEK_API_KEY`를 넣고 다음을 실행합니다.
 

@@ -71,6 +71,20 @@ def dump_frontmatter(data: dict, body: str = "") -> str:
     return "\n".join(lines)
 
 
+def _unquote(value: str) -> str:
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in ('"', "'"):
+        inner = value[1:-1]
+        if value[0] == '"':
+            inner = (
+                inner.replace("\\n", "\n")
+                .replace("\\t", "\t")
+                .replace('\\"', '"')
+                .replace("\\\\", "\\")
+            )
+        return inner
+    return value
+
+
 def parse_frontmatter(text: str) -> tuple[dict, str]:
     stripped = text.lstrip("\ufeff")
     if not stripped.startswith("---"):
@@ -80,29 +94,54 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
         return {}, stripped
     raw, body = parts[1], parts[2].lstrip("\n")
     data: dict = {}
-    current_list: str | None = None
-    for line in raw.splitlines():
-        if not line.strip():
+    lines = raw.splitlines()
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        if not line.strip() or line.startswith("  - ") or line.startswith("\t- "):
+            index += 1
             continue
-        if current_list and line.startswith("  - "):
-            if not isinstance(data.get(current_list), list):
-                data[current_list] = []
-            data[current_list].append(line[4:].strip().strip('"').strip("'"))
-            continue
-        current_list = None
         if ":" not in line:
+            index += 1
             continue
         key, value = line.split(":", 1)
         key = key.strip()
         value = value.strip()
+        if value in {"|", "|-", "|+", ">", ">-", ">+"}:
+            folded = value.startswith(">")
+            block: list[str] = []
+            index += 1
+            while index < len(lines):
+                nxt = lines[index]
+                if nxt.strip() == "":
+                    block.append("")
+                    index += 1
+                    continue
+                if nxt.startswith(" ") or nxt.startswith("\t"):
+                    block.append(nxt.strip())
+                    index += 1
+                    continue
+                break
+            text_block = "\n".join(block).strip()
+            if folded:
+                text_block = re.sub(r"\s*\n\s*", " ", text_block).strip()
+            data[key] = text_block
+            continue
         if value == "":
-            data[key] = ""
-            current_list = key
+            items: list[str] = []
+            index += 1
+            while index < len(lines) and (
+                lines[index].startswith("  - ") or lines[index].startswith("\t- ")
+            ):
+                items.append(_unquote(lines[index].split("-", 1)[1].strip()))
+                index += 1
+            data[key] = items
             continue
         if value in ("true", "false"):
             data[key] = value == "true"
-            continue
-        data[key] = value.strip('"').strip("'")
+        else:
+            data[key] = _unquote(value)
+        index += 1
     return data, body
 
 

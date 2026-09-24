@@ -13,7 +13,8 @@
     "astro": "astro",
     "migrate": "node scripts/migrate.mjs",
     "import:wxr": "node scripts/import-wxr.mjs",
-    "publish:movie": "python3 scripts/publish_movie.py"
+    "publish:movie": "python3 scripts/publish_movie.py",
+    "cms": "npx decap-server"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
